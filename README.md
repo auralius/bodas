@@ -11,3 +11,5 @@ G2(s)=(s+b)/s
 G3(s)=1/s  
 G4(s)=s  
 G5(s)=K  
+
+![Screenshot](sshot.png)
