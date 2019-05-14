@@ -41,7 +41,6 @@ ctr = 1;
 A = zeros(1,length(omega));
 B = zeros(1,length(omega));
 C = zeros(1,length(omega));
-K = 0;
 
 for i = 1:length(Z)
     if Z(i) == 0 % Zero at the origin
@@ -127,7 +126,6 @@ grid on;
 A = zeros(1,length(omega));
 B = zeros(1,length(omega));
 C = zeros(1,length(omega));
-K = 0;
 
 for i = 1:length(Z)
     if Z(i) == 0
