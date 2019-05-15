@@ -1,8 +1,7 @@
 # bodas
 The asymptotic bode diagram in MATLAB
-How to use:
 
-Formalization:
+## Formalization
 
 An open loop transfer function is decomposed into the following forms:
 
@@ -12,12 +11,14 @@ G3(s)=1/s
 G4(s)=s  
 G5(s)=K 
 
-This function CAN NOT handle complex poles/zeros. 
+It is a must to formalize the system first. Also, bodas CAN NOT handle complex poles/zeros. 
+
+## A screenshot of how the result looks like
 
 ![Screenshot](sshot.png)
 
 
-## How to use:
+## How to use
 
 A system with gain = 0.1, and zeros = [10 100], poles = [1]
 ```
@@ -30,9 +31,9 @@ bodas([10 100], [1], 0.1)
 
 A system with gain = -10, zeros = [0], poles = [1 1 10]. The bode is drawn in frequency 0.002 to 1000 rad/s
 ```
-%           1       1       10
-% G(s) =  ----- * ----- * ------ * s * (-10)
-%         (s+1)   (s+1)   (s+10)
+%              1       1       10
+% G(s) = s * ----- * ----- * ------ * (-10)
+%            (s+1)   (s+1)   (s+10)
 %        
 bodas([0],[1 1 10], -10, [-2 3]) 
 ```
