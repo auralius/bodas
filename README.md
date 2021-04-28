@@ -6,7 +6,7 @@ The asymptotic bode diagram in MATLAB
 In order to use bodas, we must first decompose our transfer function as a product of:
 
 G1(s)=1/(s+a)  
-G2(s)=(s+b)
+G2(s)=(s+b)  
 G3(s)=1/s  
 G4(s)=s  
 G5(s)=K 
