@@ -8,13 +8,13 @@
 %
 %          (s+z1)(s+z2) ... (s+zm)
 % G(s) = K -----------------------
-%          (s+p1)(s+z2) ... (p+zn)     
+%          (s+p1)(s+z2) ... (p+zn)
 %
 % To draw the asymptotic Bode plots, we use the following script:
 %
 % bodas([z1 z2 ... zm], [p1 p2 ... pn], K)
 %
-% We can also define the frequency range as follows:       
+% We can also define the frequency range as follows:
 %
 % bodas([z1 z2 ... zm], [p1 p2 ... pn], K, [-2 3])
 % Here, at the last argument, -2 corresponds to 10^-2 and 3 corresponds to 10^3.
@@ -64,18 +64,18 @@ for i = 1:length(Z)
             end
         end
     end
-    
+
     plot(omega,A(i,:));
     if Z(i) == 0
         legend_text{ctr} = "G(s)=s";
     else
-        legend_text{ctr} = "G(s)=s+"+ num2str(Z(i));
+        legend_text{ctr} = strcat("G(s)=s+", num2str(Z(i))+")");
     end
     ctr = ctr + 1;
 end
 
 for i = 1:length(P)
-    
+
     if P(i) == 0  % Pole at the origin
         offset = log10(1/omega(1))*20;
         for j = 1:length(omega)
@@ -91,13 +91,13 @@ for i = 1:length(P)
             end
         end
     end
-    
-    
+
+
     plot(omega,B(i,:));
     if P(i) == 0
         legend_text{ctr} = "G(s)=1/s";
     else
-        legend_text{ctr} = "G(s)=1/(s+"+ num2str(P(i))+")" ;
+        legend_text{ctr} = strcat("G(s)=1/(s+", num2str(P(i))+")") ;
     end
     ctr = ctr + 1;
 end
@@ -108,15 +108,15 @@ if K ~= 0 && nargin > 2
     for j = 1:length(omega)
         C(j)=kDb;
     end
-    
+
     plot(omega,C);
-    legend_text{ctr} = "G(s)="+ num2str(K);
+    legend_text{ctr} = strcat("G(s)=", num2str(K));
 end
 
 % Combinations
 plot(omega, sum([sum(A,1);sum(B,1);C],1), 'LineWidth',3, 'LineStyle', '-.');
 set(gca, 'XScale', 'log');
-legend(legend_text, 'Location', 'best');
+legend(legend_text, 'Location', 'northeast');
 ylabel('Magnitude (dB)');
 
 % -------------------------------------------------------------------------
@@ -163,7 +163,7 @@ for i = 1:length(P)
 
         end
      end
-    
+
     plot(omega,B(i,:));
 end
 
