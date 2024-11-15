@@ -22,31 +22,38 @@
 % Please, check the PDF file for more detailed examples.
 
 
-function bodas(Z, P, K, range)
+function [G, w] = bodas(Z, P, K)
+Z = sort(Z);
+P = sort(P);
 
-if nargin > 3
-    % Frequency = from 10e-1 to 10e3
-    omega = logspace(range(1), range(2), 100);
-else
-    % Frequency = from 10e-1 to 10e3
-    omega = logspace(-1, 3, 100);
-end
+W = sort(unique(nonzeros([Z, P])));
+wmin = W(1)/100;
+wmax = W(end)*100;
+w = {wmin, wmax};
+omega = logspace(log10(wmin), log10(wmax), 1000);
+
+s = tf('s');
 
 % -------------------------------------------------------------------------
 % Gain plot
 % -------------------------------------------------------------------------
 
 figure;
-subplot(2,1,1)
+set(gcf,'units','normalized','outerposition',[0 0 1 1])
+
+[ha, pos] = tight_subplot(2, 1, [0.05, 0.05]);
+
+axes(ha(1));
 hold on;
 grid on;
 
-legend_text = cell(length(Z) + length(P ), 1);
+legend_text = cell(length(Z) + length(P) + 3, 1);
 ctr = 1;
 
 A = zeros(1,length(omega));
 B = zeros(1,length(omega));
 C = zeros(1,length(omega));
+G = 1;
 
 for i = 1:length(Z)
     if Z(i) == 0 % Zero at the origin
@@ -57,7 +64,7 @@ for i = 1:length(Z)
         A(i,:)=A(i,:) - offset;
     else
         for j = 1:length(omega)
-            if omega(j) > Z(i)
+            if omega(j) >= Z(i)
                 A(i,j)=20*log10(omega(j)/omega(max(j-1,1)))+ A(i,max(j-1,1));
             else
                 A(i,j)=20*log10(Z(i));
@@ -65,11 +72,13 @@ for i = 1:length(Z)
         end
     end
     
-    plot(omega,A(i,:));
+    plot(omega,A(i,:), 'LineWidth', 2);
     if Z(i) == 0
         legend_text{ctr} = "G(s)=s";
+        G = G * s;
     else
         legend_text{ctr} = "G(s)=s+"+ num2str(Z(i));
+        G = G * s+Z(i);
     end
     ctr = ctr + 1;
 end
@@ -84,8 +93,8 @@ for i = 1:length(P)
         B(i,:)=B(i,:)+offset;
     else
         for j = 1:length(omega)
-            if omega(j) > P(i)
-                B(i,j)=-20*log10(omega(j)/omega(j-1))+ B(i,j-1);
+            if omega(j) >= P(i)
+                B(i,j)=-20*log10(omega(j)/omega(max(j-1,1)))+ B(i,max(j-1,1));
             else
                 B(i,j)=-20*log10(P(i));
             end
@@ -93,11 +102,13 @@ for i = 1:length(P)
     end
     
     
-    plot(omega,B(i,:));
+    plot(omega,B(i,:), 'LineWidth', 2);
     if P(i) == 0
         legend_text{ctr} = "G(s)=1/s";
+        G = G * 1/s;
     else
         legend_text{ctr} = "G(s)=1/(s+"+ num2str(P(i))+")" ;
+        G = G * 1/(s+P(i));
     end
     ctr = ctr + 1;
 end
@@ -109,21 +120,27 @@ if K ~= 0 && nargin > 2
         C(j)=kDb;
     end
     
-    plot(omega,C);
+    plot(omega, C, 'LineWidth', 2);
     legend_text{ctr} = "G(s)="+ num2str(K);
-end
+    G = G * K;
+
+[mag,phase, wout] = bode(G, {wmin, wmax});       
 
 % Combinations
-plot(omega, sum([sum(A,1);sum(B,1);C],1), 'LineWidth',3, 'LineStyle', '-.');
-set(gca, 'XScale', 'log');
+plot(omega, sum([sum(A,1);sum(B,1);C],1), 'LineWidth',6, 'LineStyle', '-');
+plot(wout, 20*log10(squeeze(mag)), 'LineWidth', 3, 'LineStyle', '-')
+
+legend_text{end-1} = "Asymptotic Bode";
+legend_text{end}= "Actual Bode";
 legend(legend_text, 'Location', 'best');
 ylabel('Magnitude (dB)');
+set(gca, 'XScale', 'log');
 
 % -------------------------------------------------------------------------
 % Phase plot
 % -------------------------------------------------------------------------
 
-subplot(2,1,2)
+axes(ha(2));
 hold on;
 grid on;
 
@@ -145,7 +162,7 @@ for i = 1:length(Z)
             end
         end
     end
-    plot(omega,A(i,:));
+    plot(omega,A(i,:), 'LineWidth', 2);
 end
 
 for i = 1:length(P)
@@ -164,7 +181,7 @@ for i = 1:length(P)
         end
      end
     
-    plot(omega,B(i,:));
+    plot(omega,B(i,:), 'LineWidth', 2);
 end
 
 % The gain
@@ -176,13 +193,13 @@ if K ~= 0 && nargin > 2
             C(j)=-180;
         end
     end
-    plot(omega, C);
+    plot(omega, C, 'LineWidth', 2);
 end
 
 % Combinations
-plot(omega, sum([sum(A,1);sum(B,1);C],1), 'LineWidth',3, 'LineStyle', '-.');
-set(gca, 'XScale', 'log');
+plot(omega, sum([sum(A,1);sum(B,1);C],1), 'LineWidth',6, 'LineStyle', '-');
 ylabel('Phase (degrees)')
 xlabel('Frequency (log scale)')
+set(gca, 'XScale', 'log');
 
 end
