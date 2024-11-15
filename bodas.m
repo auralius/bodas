@@ -1,4 +1,4 @@
-% Drawing asymptotic bode from 0.1 to 1000 Hz, by default
+% Drawing asymptotic bode
 % Does not work with complex poles
 
 % Auralius Manurung
@@ -8,7 +8,7 @@
 %
 %          (s+z1)(s+z2) ... (s+zm)
 % G(s) = K -----------------------
-%          (s+p1)(s+z2) ... (p+zn)     
+%          (s+p1)(s+p2) ... (s+pn)     
 %
 % To draw the asymptotic Bode plots, we use the following script:
 %
@@ -16,8 +16,7 @@
 %
 % We can also define the frequency range as follows:       
 %
-% bodas([z1 z2 ... zm], [p1 p2 ... pn], K, [-2 3])
-% Here, at the last argument, -2 corresponds to 10^-2 and 3 corresponds to 10^3.
+% bodas([z1 z2 ... zm], [p1 p2 ... pn], K)
 %
 % Please, check the PDF file for more detailed examples.
 
@@ -74,10 +73,10 @@ for i = 1:length(Z)
     
     plot(omega,A(i,:), 'LineWidth', 2);
     if Z(i) == 0
-        legend_text{ctr} = "G(s)=s";
+        legend_text{ctr} = "s";
         G = G * s;
     else
-        legend_text{ctr} = "G(s)=s+"+ num2str(Z(i));
+        legend_text{ctr} = "s+"+ num2str(Z(i));
         G = G * s+Z(i);
     end
     ctr = ctr + 1;
@@ -104,10 +103,10 @@ for i = 1:length(P)
     
     plot(omega,B(i,:), 'LineWidth', 2);
     if P(i) == 0
-        legend_text{ctr} = "G(s)=1/s";
+        legend_text{ctr} = "1/s";
         G = G * 1/s;
     else
-        legend_text{ctr} = "G(s)=1/(s+"+ num2str(P(i))+")" ;
+        legend_text{ctr} = "1/(s+"+ num2str(P(i))+")" ;
         G = G * 1/(s+P(i));
     end
     ctr = ctr + 1;
@@ -121,17 +120,17 @@ if K ~= 0 && nargin > 2
     end
     
     plot(omega, C, 'LineWidth', 2);
-    legend_text{ctr} = "G(s)="+ num2str(K);
+    legend_text{ctr} = num2str(K);
     G = G * K;
 
 [mag,phase, wout] = bode(G, {wmin, wmax});       
 
 % Combinations
-plot(omega, sum([sum(A,1);sum(B,1);C],1), 'LineWidth',6, 'LineStyle', '-');
-plot(wout, 20*log10(squeeze(mag)), 'LineWidth', 3, 'LineStyle', '-')
+plot(omega, sum([sum(A,1);sum(B,1);C],1), 'LineWidth',6, 'LineStyle', '-', 'Color', [.7, .7,.7]);
+plot(wout, 20*log10(squeeze(mag)), 'LineWidth', 2, 'LineStyle', '-', 'Color', 'k');
 
 legend_text{end-1} = "Asymptotic Bode";
-legend_text{end}= "Actual Bode";
+legend_text{end}= "Exact Bode";
 legend(legend_text, 'Location', 'best');
 ylabel('Magnitude (dB)');
 set(gca, 'XScale', 'log');
@@ -197,7 +196,8 @@ if K ~= 0 && nargin > 2
 end
 
 % Combinations
-plot(omega, sum([sum(A,1);sum(B,1);C],1), 'LineWidth',6, 'LineStyle', '-');
+plot(omega, wrapTo360(sum([sum(A,1);sum(B,1);C],1)), 'LineWidth',6, 'LineStyle', '-', 'Color', [.7, .7,.7]);
+plot(wout, squeeze(phase), 'LineWidth', 2, 'LineStyle', '-', 'Color', 'k');
 ylabel('Phase (degrees)')
 xlabel('Frequency (log scale)')
 set(gca, 'XScale', 'log');
