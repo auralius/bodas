@@ -5,18 +5,29 @@ The asymptotic bode diagram in MATLAB
 
 In order to use bodas, we must first decompose our transfer function as a product of:
 
-G(s) = 1/(s+a)  
-G(s) = (s+b)  
-G(s) = 1/s  
-G(s) = s  
-G(s) = K 
+Real pole                  : G(s) = 1/(s+a)  
+Real zero                  : G(s) = (s+b)  
+Pole at the origin         : G(s) = 1/s  
+Zero at the origin         : G(s) = s  
+Constant gain      	   : G(s) = K 
+Complex conjugate zeros    : G(s) = (s+a+bi)*(s+a-bi)
+Complex conjugate poles    : G(s) = 1 / ( (s+a+bi)*(s+a-bi) )
 
 Please note that bodas CAN NOT handle complex poles/zeros. 
 
 ## A screenshot of how the result looks like
 
-![Screenshot](sshot.png)
+### Ex.1 with real poles/zeros
 
+![Screenshot](sshot1.png)
+
+![Screenshot](sshot2.png)
+
+### Ex2. with complex conjugate poles/zeros
+
+![Screenshot](sshot3.png)
+
+![Screenshot](sshot4.png)
 
 ## How to use
 

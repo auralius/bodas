@@ -10,5 +10,5 @@
 clc
 close all
 
-[G, w] = bodas([0], [1 1 10], -100);
+[G, w] = bodas([0.1+2i], [0], -1);
 
