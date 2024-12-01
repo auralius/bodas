@@ -9,6 +9,8 @@
 
 clc
 close all
+s = tf('s');
+G = -100*s / (s^3 + 12*s^2 + 21*s + 10)
 
-[G, w] = bodas([0], [1 1 10], -100);
+[G, w] = bodas(G);
 

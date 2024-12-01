@@ -20,11 +20,41 @@
 % Please, check the PDF file for more detailed examples.
 
 
-function [G, w] = bodas(z, p, k)
+function [G, w] = bodas(sys)
+q = zpk(sys); 
+z = q.Z{1};
+p = q.P{1};
+k = q.K;
+
+i = 1;
+while(~isempty(z))
+    if isreal(z(i)) == false
+        z(find(z == conj(z(i)))) = [];
+    end
+    z(i) = -z(i);
+    i = i + 1;
+    if i > length(z)
+        break;
+    end
+end
+
+i = 1;
+while(~isempty(p))
+    if isreal(p(i)) == false
+        p(find(p == conj(p(i)))) = [];
+    end
+        p(i) = -p(i);
+
+    i = i + 1;
+    if i > length(p)
+        break;
+    end
+end
+
 z = sort(z);
 p = sort(p);
 
-W = unique(nonzeros([z, p]));
+W = unique(nonzeros([z; p]));
 for j  = 1 : length(W)
     if isreal(W(j)) == false
         W(j) = ceil(log10(sqrt(W(j) * conj(W(j)))));
@@ -58,7 +88,7 @@ axes(ha(1));
 hold on;
 grid on;
 
-legend_text = cell(length(z) + length(p) + 3, 1);
+legend_text = cell(length(z) + length(p) + length(k) + 2, 1);
 ctr = 1;
 
 A = zeros(length(z), length(omega));
@@ -150,7 +180,7 @@ for i = 1:length(p)
             end
         end
         if zeta < 0.5
-            B(i,peak_idx)=B(i,peak_idx)-20*log10(1/(2*zeta));
+            B(i,peak_idx)=B(i,peak_idx)+20*log10(1/(2*zeta));
         end
     end
     
@@ -170,7 +200,7 @@ for i = 1:length(p)
 end
 
 % The gain
-if k ~= 0 && nargin > 2
+if k ~= 0
     kDb = 20*log10(abs(k));
     for j = 1:length(omega)
         C(j)=kDb;
@@ -282,8 +312,8 @@ end
 
 % Combinations
 S = sum([sum(A,1);sum(B,1);C],1);
-if min(S) <= -180
-    S = S + 360;
+if min(S) <= 0
+    S = S + 180;
 end
 plot(omega, S, 'LineWidth',3, 'LineStyle', '-', 'Color', [.7, .7,.7]);
 plot(wout, squeeze(phase), 'LineWidth', 2, 'LineStyle', ':', 'Color', 'k');
