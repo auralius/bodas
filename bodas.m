@@ -312,7 +312,7 @@ end
 
 % Combinations
 S = sum([sum(A,1);sum(B,1);C],1);
-if min(S) <= 0
+if min(S) < 0
     S = S + 180;
 end
 plot(omega, S, 'LineWidth',3, 'LineStyle', '-', 'Color', [.7, .7,.7]);
