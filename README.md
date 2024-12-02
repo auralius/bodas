@@ -32,4 +32,5 @@ Please read: bodas-manual.pdf
 
 ## References
 
-[MIT OCW -- Dynamics and Control II -- Lecture 3](https://ocw.mit.edu/courses/2-004-dynamics-and-control-ii-spring-2008/f8706caa7aecebcc533553fb154778d0_lecture_33.pdf)
+[MIT OCW -- Dynamics and Control II -- Lecture 33](https://ocw.mit.edu/courses/2-004-dynamics-and-control-ii-spring-2008/f8706caa7aecebcc533553fb154778d0_lecture_33.pdf)  
+https://lpsa.swarthmore.edu/Bode/BodeHow.html
