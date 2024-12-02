@@ -1,24 +1,12 @@
 % Drawing asymptotic bode
-
+%
 % Auralius Manurung
 % manurung.auralius@gmail.com
-
-% A system defined as:
-%
-%          (s+z1)(s+z2) ... (s+zm)
-% G(s) = K -----------------------
-%          (s+p1)(s+p2) ... (s+pn)     
-%
-% To draw the asymptotic Bode plots, we use the following script:
-%
-% bodas([z1 z2 ... zm], [p1 p2 ... pn], K)
-%
-% We can also define the frequency range as follows:       
-%
-% bodas([z1 z2 ... zm], [p1 p2 ... pn], K)
-%
+% 
 % Please, check the PDF file for more detailed examples.
-
+%
+% sys is the system transfer function in s-domain
+%
 
 function [G, w] = bodas(sys)
 q = zpk(sys); 
