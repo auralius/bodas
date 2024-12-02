@@ -29,3 +29,7 @@ G = (-s^2-0.2*s-4.01) / s
 ## How to use
 
 Please read: bodas-manual.pdf
+
+## References
+
+[MIT OCW -- Dynamics and Control II -- Lecture 3](https://ocw.mit.edu/courses/2-004-dynamics-and-control-ii-spring-2008/f8706caa7aecebcc533553fb154778d0_lecture_33.pdf)
