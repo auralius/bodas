@@ -71,7 +71,7 @@ end
 
 wmin = W(1)-2;
 wmax = W(end)+2;
-omega = logspace(wmin, wmax, 1000);
+omega = logspace(wmin, wmax, 5000);
 
 s = tf('s');
 
@@ -82,7 +82,7 @@ s = tf('s');
 figure;
 set(gcf,'units','normalized','outerposition',[0 0 1 1])
 
-[ha, ] = tight_subplot(2, 1, [0.05, 0.05]);
+[ha, ] = tight_subplot(1, 2, [0.05, 0.05]);
 
 axes(ha(1));
 hold on;
@@ -202,7 +202,7 @@ end
 % The gain
 if k ~= 0
     kDb = 20*log10(abs(k));
-    for j = 1:length(omega)
+    for j = 1:length(omega)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
         C(j)=kDb;
     end
     
@@ -212,11 +212,13 @@ if k ~= 0
 end
 
 [mag,phase, wout] = bode(G, {10^wmin, 10^wmax});       
+phase = squeeze(phase);
+mag = squeeze(mag);
 
 % Combinations
 M = sum([sum(A,1);sum(B,1);C],1);
 plot(omega, M, 'LineWidth',3, 'LineStyle', '-', 'Color', [.7, .7,.7]);
-plot(wout, 20*log10(squeeze(mag)), 'LineWidth', 2, 'LineStyle', ':', 'Color', 'k');
+plot(wout, 20*log10(mag), 'LineWidth', 2, 'LineStyle', ':', 'Color', 'k');
 
 legend_text{end-1} = "Asymptotic Bode";
 legend_text{end}= "Exact Bode";
@@ -312,11 +314,10 @@ end
 
 % Combinations
 S = sum([sum(A,1);sum(B,1);C],1);
-if min(S) < 0
-    S = S + 180;
-end
+dphase = S(end) - phase(end);
+
 plot(omega, S, 'LineWidth',3, 'LineStyle', '-', 'Color', [.7, .7,.7]);
-plot(wout, squeeze(phase), 'LineWidth', 2, 'LineStyle', ':', 'Color', 'k');
+plot(wout, phase+dphase, 'LineWidth', 2, 'LineStyle', ':', 'Color', 'k');
 ylabel('Phase (degrees)')
 xlabel('Frequency (log scale)')
 set(gca, 'XScale', 'log');
@@ -328,7 +329,7 @@ axes(hb(1));
 hold on;
 grid on;
 plot(omega, M, 'LineWidth',3, 'LineStyle', '-', 'Color', [.7, .7,.7]);
-plot(wout, 20*log10(squeeze(mag)), 'LineWidth', 2, 'LineStyle', ':', 'Color', 'k');
+plot(wout, 20*log10(mag), 'LineWidth', 2, 'LineStyle', ':', 'Color', 'k');
 legend({'Asymptotic Bode', 'Exact Bode'}, 'Location', 'best');
 ylabel('Magnitude (dB)');
 set(gca, 'XScale', 'log');
@@ -337,8 +338,7 @@ axes(hb(2));
 hold on;
 grid on;
 plot(omega, S, 'LineWidth',3, 'LineStyle', '-', 'Color', [.7, .7,.7]);
-plot(wout, squeeze(phase), 'LineWidth', 2, 'LineStyle', ':', 'Color', 'k');
-legend({'Asymptotic Bode', 'Exact Bode'}, 'Location', 'best');
+plot(wout, phase+dphase, 'LineWidth', 2, 'LineStyle', ':', 'Color', 'k');
 ylabel('Phase (degrees)')
 xlabel('Frequency (log scale)')
 set(gca, 'XScale', 'log');
